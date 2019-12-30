@@ -1,0 +1,8 @@
+---
+- name: web server configuration
+  hosts: web
+  become: yes
+
+  roles:
+   - dev
+   - prod

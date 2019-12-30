@@ -1,0 +1,28 @@
+---
+# tasks file for dev
+- name: Install Java
+  apt: name={{item}} state=latest
+  with_items:
+          - openjdk-8-jdk
+
+- name: Ensure git package is present
+  apt:
+    name: git
+    state: present
+
+- name: Download Apache Maven 
+  get_url: url=https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz dest=/tmp/apache-maven-3.6.3-bin.tar.gz
+
+- name: Untar Maven 
+  shell: chdir=/tmp creates=/opt/apache-maven-3.6.3 tar -zxf apache-maven-3.6.3-bin.tar.gz -C /opt
+
+- name: Update path for maven use
+  shell: export PATH=/opt/apache-maven-3.6.3/bin:$PATH
+
+- name: Clone repo
+  git:
+    repo: https://github.com/venkaDaria/puzzle15.git
+    dest: /srv/puzzle15
+    
+- name: Build sample app
+  shell: /opt/apache-maven-3.6.3/bin/mvn package chdir=/srv/puzzle15/
